@@ -1,123 +1,76 @@
-// You can import supported modules from npm
-import { Card } from 'react-native-paper';
-
-import { StyleSheet, View, Text, TextInput } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Login() {
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          flexDirection: 'column',
-          minHeight: '100vh',
-          background:
-            'linear-gradient(to bottom, #E0F7FA 0%, #E0F7FA 60%, #00BCD4 100%)',
-          padding: '20px',
-          fontFamily: 'Arial, sans-serif',
-        },
-      ]}>
-      <View
-        style={{
-          flex: 2,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          paddingTop: '60px',
-        }}>
-        <Text 
-          style={{
-            fontSize: '40px',
-            fontWeight: 'bold',
-            letterSpacing: '1px'
-          }}>
-          CODE
-        </Text>
+    <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerText}>LOGIN</Text>
       </View>
-      <View
-        style={{
-          flex: 2,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          padding: '0 40px',
-        }}>
-        <Text
-          style={{
-            fontSize: '15px',
-            fontWeight: 'bold',
-            color: '#000000',
-            marginBottom: '20px',
-            lineHeight: '1.2',
-            alignItems: 'center',
-            textAlign: 'center',
-          }}>
-          VERIFICATION
-        </Text>
-        <Text
-          style={{
-            fontSize: '13px',
-            color: '#333333',
-            lineHeight: '1.5',
-            maxWidth: '300px',
-            alignItems: 'center',
-            textAlign: 'center',
-            paddingBottom: '15px',
-            fontWeight: 'bold'
-          }}>
-          Enter online password sent on {"\n"} ++849092605798
-        </Text>
-        <View style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          width: '100%',
-          marginVertical: 10
-        }}>
-          {[0, 1, 2, 3, 4, 5].map((index) => (
-            <TextInput
-              key = {index}
-              style = {{
-                width: 40,
-                height: 40,
-                borderWidth: 1,
-                borderColor: "#000",
-                textAlign: 'center',
-                fontSize: '16'
-              }}
-              keyboardType="number-pad"
-              maxLength={1}
-              selectTextOnFocus>
-            </TextInput>
-          ))}
+
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor="#333"
+        />
+
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            placeholderTextColor="#333"
+            secureTextEntry
+          />
+          <TouchableOpacity style={styles.eyeIcon}>
+            <Ionicons name="eye" size={24} color="#333" />
+          </TouchableOpacity>
         </View>
-      </View>
-      <View
-        style={{
-          flex: 2,
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          alignItems: 'center',
-          padding: '20px 40px',
-          gap: '20px',
-        }}>
-        <button
-          style={{
-            backgroundColor: '#FFC107',
-            border: 'none',
-            padding: '15px 30px',
-            borderRadius: '8px',
-            fontSize: '12px',
-            fontWeight: 'bold',
-            color: '#000000',
-            cursor: 'pointer',
-            minWidth: '100px',
-            width: '100%',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-            transition: 'all 0.3s ease',
-          }}>
-          NEXT
-        </button>
+
+        <TouchableOpacity style={styles.loginButton}>
+          <Text style={styles.loginButtonText}>LOGIN</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.termsText}>
+          When you agree to terms and conditions
+        </Text>
+
+        <TouchableOpacity>
+          <Text style={styles.forgotPasswordText}>Forgot your password?</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.orLoginText}>Or login with</Text>
+
+        <View style={styles.socialLoginContainer}>
+          <TouchableOpacity
+            style={[styles.socialButton, styles.facebookButton]}>
+            <Image
+              style={styles.sizeLogo}
+              source={require('../assets/facebook-logo-facebook-icon-transparent-free-png.webp')}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.socialButton, styles.zaloButton]}>
+            <Image
+              style={styles.sizeLogo}
+              source={require('../assets/Letter-Z-icon.png')}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.socialButton, styles.googleButton]}>
+            <Image
+              style={styles.sizeLogo}
+              source={require('../assets/gg-icon.png')}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -126,6 +79,95 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#e5f5e5',
     padding: 20,
+  },
+  headerContainer: {
+    alignItems: 'center',
+    marginTop: 40,
+    marginBottom: 20,
+  },
+  headerText: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  inputContainer: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  input: {
+    backgroundColor: '#d7e8d7',
+    width: '100%',
+    padding: 15,
+    marginBottom: 20,
+    borderRadius: 4,
+  },
+  passwordContainer: {
+    position: 'relative',
+    width: '100%',
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 15,
+    top: 15,
+  },
+  loginButton: {
+    backgroundColor: '#d55b45',
+    width: '100%',
+    padding: 15,
+    alignItems: 'center',
+    borderRadius: 4,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  loginButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  termsText: {
+    fontSize: 14,
+    color: '#333',
+    marginTop: 10,
+  },
+  forgotPasswordText: {
+    color: '#6a5acd',
+    marginTop: 15,
+    fontSize: 14,
+  },
+  orLoginText: {
+    marginTop: 20,
+    marginBottom: 20,
+    color: '#333',
+    fontSize: 14,
+  },
+  socialLoginContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  socialButton: {
+    flex: 1,
+    padding: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 2,
+    height: '50px',
+  },
+  facebookButton: {
+    backgroundColor: '#0080ff',
+  },
+  zaloButton: {
+    backgroundColor: '#3b88c3',
+  },
+  googleButton: {
+    backgroundColor: '#e5f5e5',
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  sizeLogo: {
+    width: '50px',
+    height: '50px',
   },
 });
