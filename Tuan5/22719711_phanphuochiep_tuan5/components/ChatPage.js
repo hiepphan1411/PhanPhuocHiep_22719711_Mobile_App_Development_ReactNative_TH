@@ -27,8 +27,7 @@ const ChatShopScreen = () => {
         const json = await response.json();
         setProducts(json);
       } catch (error) {
-        console.error('Error fetching data:', error);
-        setError(error);
+        console.error('Lỗi fetch:', error);
       } finally {
         setLoading(false);
       }
@@ -84,18 +83,6 @@ const ChatShopScreen = () => {
         style={styles.productList}
         showsVerticalScrollIndicator={false}
       />
-
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navButton}>
-          <Image source={require('../assets/Group 10.png')}></Image>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
-          <Image source={require('../assets/Vector (Stroke).png')}></Image>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
-          <Image source={require('../assets/Vector 1 (Stroke).png')}></Image>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 };
