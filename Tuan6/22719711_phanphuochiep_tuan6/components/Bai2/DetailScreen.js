@@ -1,66 +1,60 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
+import {getColorProperties} from './useProductData'
 
 const DetailScreen = ({ route, navigation }) => {
-  const { selectedColor = 'blue' } = route.params || {};
-  
-  const phoneImages = {
-    white: require('../../assets/white.png'),
-    red: require('../../assets/red.png'),
-    black: require('../../assets/black.png'),
-    blue: require('../../assets/blue.png'),
-  };
+  const { selectedColor, product, selectedImageUrl } = route.params || {};
 
-  const colorNames = {
-    white: 'Trắng',
-    red: 'Đỏ',
-    black: 'Đen',
-    blue: 'Xanh',
-  };
+  const color = selectedColor || (product?.colors?.[0] || 'blue');
+  const colorProps = getColorProperties(color);
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.productContainer}>
-        <Image 
-          source={phoneImages[selectedColor]} 
-          style={styles.productImage} 
-          resizeMode="contain" 
-        />
-        
-        <Text style={styles.productTitle}>Điện Thoại Vsmart Joy 3 - Hàng chính hãng</Text>
-        <Text style={styles.colorName}>Màu: {colorNames[selectedColor]}</Text>
-        
-        <View style={styles.ratingContainer}>
-          {[1, 2, 3, 4, 5].map(star => (
-            <Text key={star} style={styles.starIcon}>⭐</Text>
-          ))}
-          <Text style={styles.reviewCount}>(Xem 828 đánh giá)</Text>
-        </View>
-        
-        <View style={styles.priceContainer}>
-          <Text style={styles.price}>1.790.000 đ</Text>
-          <Text style={styles.oldPrice}>1.790.000 đ</Text>
-        </View>
-        
-        <View style={styles.promotionContainer}>
-          <Text style={styles.promotionText}>Ở ĐÂU RẺ HƠN HOÀN TIỀN</Text>
-          <TouchableOpacity>
-            <Text style={styles.questionIcon}>?</Text>
+      <ScrollView>
+        <View style={styles.productContainer}>
+          <Image 
+            source={{ uri: selectedImageUrl }}
+            style={styles.productImage} 
+            resizeMode="contain" 
+          />
+          
+          <Text style={styles.productTitle}>{product.name}</Text>
+          <Text style={styles.colorName}>Màu: {colorProps.label}</Text>
+          
+          <View style={styles.ratingContainer}>
+            {[1, 2, 3, 4, 5].map(star => (
+              <Image source={require("../../assets/star.png")}/>
+            ))}
+            <Text style={styles.reviewCount}>(Xem {product.numEval} đánh giá)</Text>
+          </View>
+          
+          <View style={styles.priceContainer}>
+            <Text style={styles.price}>{product.price.toLocaleString()} đ</Text>
+            {product.price !== product.priceSale && (
+              <Text style={styles.oldPrice}>{product.priceSale.toLocaleString()} đ</Text>
+            )}
+          </View>
+          
+          <View style={styles.promotionContainer}>
+            <Text style={styles.promotionText}>Ở ĐÂU RẺ HƠN HOÀN TIỀN</Text>
+            <TouchableOpacity>
+              <Text style={styles.questionIcon}>?</Text>
+            </TouchableOpacity>
+          </View>
+          
+          <TouchableOpacity 
+            style={styles.colorSelectionButton}
+            onPress={() => navigation.navigate('ColorSelection', { product })}
+          >
+            <Text style={styles.colorButtonText}>{product.colors.length} MÀU-CHỌN LOẠI</Text>
+            <Text style={styles.arrowIcon}>›</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.buyButton}>
+            <Text style={styles.buyButtonText}>CHỌN MUA</Text>
           </TouchableOpacity>
         </View>
-        
-        <TouchableOpacity 
-          style={styles.colorSelectionButton}
-          onPress={() => navigation.navigate('ColorSelection')}
-        >
-          <Text style={styles.colorButtonText}>4 MÀU-CHỌN LOẠI</Text>
-          <Text style={styles.arrowIcon}>›</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.buyButton}>
-          <Text style={styles.buyButtonText}>CHỌN MUA</Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -97,9 +91,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
     alignSelf: 'flex-start',
-  },
-  starIcon: {
-    marginRight: 2,
   },
   reviewCount: {
     marginLeft: 5,

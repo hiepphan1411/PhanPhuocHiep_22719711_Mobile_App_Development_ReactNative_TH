@@ -1,40 +1,32 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
+import {getColorProperties} from "./useProductData"
 
-const ColorSelectionScreen = ({ navigation }) => {
-  const [selectedColor, setSelectedColor] = useState('blue'); // Default color
+const ColorSelectionScreen = ({ route, navigation }) => {
+  const { product } = route.params || {};
+  const [selectedColor, setSelectedColor] = useState(product?.colors?.[0] || 'blue');
   
-  const colors = [
-    { name: 'white', code: '#ffffff' },
-    { name: 'red', code: '#F30D0D' },
-    { name: 'black', code: '#000000' },
-    { name: 'blue', code: '#234896' },
-  ];
-  
-  const phoneImages = {
-    white: require('../../assets/white.png'),
-    red: require('../../assets/red.png'),
-    black: require('../../assets/black.png'),
-    blue: require('../../assets/blue.png'),
+  const getImageIndex = (colorName) => {
+    if (!product || !product.colors) return 0;
+    return product.colors.indexOf(colorName);
   };
+
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.topContainer}>
           <Image 
-            source={phoneImages[selectedColor]} 
+            source={{ uri: product.img[getImageIndex(selectedColor)] }} 
             style={styles.phoneImage} 
             resizeMode="contain"
           />
           <View style={styles.phoneInfo}>
-            <Text style={styles.phoneTitle}>Điện Thoại Vsmart Joy 3</Text>
-            <Text style={styles.phoneSubtitle}>Hàng chính hãng</Text>
-            {selectedColor === 'red' && <Text style={styles.colorLabel}>Màu: đỏ</Text>}
-            {selectedColor === 'blue' && <Text style={styles.colorLabel}>Màu: xanh</Text>}
-            {selectedColor === 'black' && <Text style={styles.colorLabel}>Màu: đen</Text>}
-            {selectedColor === 'white' && <Text style={styles.colorLabel}>Màu: Trắng</Text>}
-            <Text style={styles.price}>1.790.000 đ</Text>
+            <Text style={styles.phoneTitle}>{product.name}</Text>
+            <Text style={styles.colorLabel}>
+              Màu: {getColorProperties(selectedColor).label}
+            </Text>
+            <Text style={styles.price}>{product.price.toLocaleString()} đ</Text>
           </View>
         </View>
 
@@ -42,27 +34,34 @@ const ColorSelectionScreen = ({ navigation }) => {
           <Text style={styles.sectionTitle}>Chọn một màu bên dưới:</Text>
 
           <View style={styles.colorOptions}>
-            {colors.map((color) => (
-              <TouchableOpacity
-                key={color.name}
-                style={[
-                  styles.colorOption, 
-                  { backgroundColor: color.code },
-                  selectedColor === color.name && styles.selectedColor
-                ]}
-                onPress={() => setSelectedColor(color.name)}
-              />
-            ))}
+            {product.colors.map((colorName) => {
+              const colorProps = getColorProperties(colorName);
+              return (
+                <TouchableOpacity
+                  key={colorName}
+                  style={[
+                    styles.colorOption, 
+                    { backgroundColor: colorProps.code },
+                    selectedColor === colorName && styles.selectedColor
+                  ]}
+                  onPress={() => setSelectedColor(colorName)}
+                />
+              );
+            })}
           </View>
 
           <TouchableOpacity 
             style={styles.confirmButton}
-            onPress={() => navigation.navigate('Detail', { selectedColor })}
+            onPress={() => navigation.navigate('Detail', { 
+              selectedColor,
+              product,
+              selectedImageUrl: product.img[getImageIndex(selectedColor)]
+            })}
           >
             <Text style={styles.confirmButtonText}>XONG</Text>
           </TouchableOpacity>
         </View>
-        </ScrollView>
+      </ScrollView>
     </SafeAreaView>
   );
 };

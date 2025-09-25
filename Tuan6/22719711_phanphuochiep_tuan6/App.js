@@ -2,36 +2,25 @@ import { StyleSheet, Text, View } from 'react-native';
 
 // You can import supported modules from npm
 import { Card } from 'react-native-paper';
-import HomeScreen from './components/Bai1/HomeScreen'
-import ColorSelectionScreen from './components/Bai1/ColorSelectionScreen'
-import DetailScreen from './components/Bai1/DetailScreen'
-// or any files within the Snack
+import HomeScreen from './components/Bai3/HomeScreen'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import DemoApp from './components/Bai3/DemoApp'
 const Stack = createNativeStackNavigator();
+import DemoBai2 from './components/Bai2/DemoBai2'
+import DemoBai4 from './components/Bai4/DemoBai4'
+import DemoBai5 from './components/Bai5/DemoBai5'
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen 
-          name="Home" 
-          component={HomeScreen} 
-          options={{ title: 'Phone Selection' }} 
-        />
-        <Stack.Screen 
-          name="ColorSelection" 
-          component={ColorSelectionScreen} 
-          options={{ title: 'Select Color' }} 
-        />
-        <Stack.Screen 
-          name="Detail" 
-          component={DetailScreen} 
-          options={{ title: 'Phone Details' }} 
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    //Bai 1, 2
+      // <DemoBai2 />
+    //Bai 3
+    // <DemoApp/>
+    //Bai 4
+    // <DemoBai4 />
+    //Bai 5
+    <DemoBai5 />
   );
 }
 

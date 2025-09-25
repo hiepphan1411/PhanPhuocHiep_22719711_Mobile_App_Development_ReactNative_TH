@@ -32,7 +32,7 @@ const DetailScreen = ({ route, navigation }) => {
         
         <View style={styles.ratingContainer}>
           {[1, 2, 3, 4, 5].map(star => (
-            <Text key={star} style={styles.starIcon}>⭐</Text>
+            <Image source={'require("../../assets/star.png")'}/>
           ))}
           <Text style={styles.reviewCount}>(Xem 828 đánh giá)</Text>
         </View>
