@@ -10,13 +10,14 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { deleteJob, getJobs, Job } from './util/db';
+import { deleteJob, getJobs, Job, updateJob } from "../util/db";
 
 export default function TasksScreen() {
   const router = useRouter();
   const [tasks, setTasks] = useState<Job[]>([]);
   const params = useLocalSearchParams();
   const name = params.name || "Guest";
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -30,16 +31,22 @@ export default function TasksScreen() {
 
     fetchTasks();
   }, []);
-  
-  const deleteHandle = async (title: string) => {
+
+  const toggleComplete = async (id: number, currentValue: boolean) => {
+    await updateJob(id, !currentValue);
+    const tasksDB = await getJobs();
+    setTasks(tasksDB);
+  };
+
+  const deleteHandle = async (id: number) => {
     try {
-      await deleteJob(title);
+      await deleteJob(id);
       const tasksDB = await getJobs();
       setTasks(tasksDB);
     } catch (error) {
       console.error("Failed to delete task:", error);
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -72,24 +79,42 @@ export default function TasksScreen() {
 
       <FlatList
         data={tasks}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.taskItem}>
             <View style={styles.taskLeft}>
-              <View style={styles.checkbox}>
+              <Pressable
+                style={styles.checkbox}
+                onPress={() => toggleComplete(item.id, item.completed)}
+              >
                 {item.completed && (
                   <Ionicons name="checkmark" size={16} color="#4CAF50" />
                 )}
-              </View>
-              <Text style={styles.taskText}>{item.title}</Text>
+              </Pressable>
+
+              {editMode ? (
+                <TextInput value={item.title} />
+              ) : (
+                <Text style={styles.taskText}>{item.title}</Text>
+              )}
             </View>
-            <Pressable style={styles.editButton} onPress={() => deleteHandle(item.title)}>
-              {/* <Feather name="edit-2" size={18} color="#FF5252" /> */}
-              delete
-            </Pressable>
-            <Pressable style={styles.editButton}>
-              <Feather name="edit-2" size={18} color="#FF5252" />
-            </Pressable>
+
+            {/* Actions */}
+            <View style={styles.taskActions}>
+              <Pressable
+                style={styles.actionButton}
+                onPress={() => deleteHandle(item.id)}
+              >
+                <Text style={styles.deleteText}>Delete</Text>
+              </Pressable>
+
+              <Pressable
+                style={styles.actionButton}
+                onPress={() => setEditMode(true)}
+              >
+                <Feather name="edit-2" size={18} color="#FF5252" />
+              </Pressable>
+            </View>
           </View>
         )}
       />
@@ -181,12 +206,22 @@ const styles = StyleSheet.create({
   },
   taskText: {
     fontSize: 16,
+    maxWidth: "60%",
   },
-  editButton: {
-    width: 30,
+  taskActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  actionButton: {
+    minWidth: 40,
     height: 30,
     justifyContent: "center",
     alignItems: "center",
+  },
+  deleteText: {
+    color: "#FF5252",
+    fontSize: 14,
   },
   addButton: {
     position: "absolute",

@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -12,16 +12,12 @@ import {
   View,
 } from "react-native";
 
-import { addJob, initDb } from './util/db';
+import { addJob } from "../util/db";
 
 export default function AddJobScreen() {
   const router = useRouter();
   const [jobTitle, setJobTitle] = useState("");
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    initDb();
-  }, [])
 
   const addJobHandle = async () => {
     if (!jobTitle.trim()) {
@@ -34,13 +30,12 @@ export default function AddJobScreen() {
     try {
       await addJob(jobTitle);
       Alert.alert("Success", "Thêm thành công", [
-        { text: "OK", onPress: () => router.back() }
+        { text: "OK", onPress: () => router.replace("/tasks") },
       ]);
-      router.replace("/tasks")
     } catch (error) {
       console.error("Error adding job:", error);
       Alert.alert("Error", "Failed to add job. Please try again.");
-    } finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -50,7 +45,8 @@ export default function AddJobScreen() {
       <View style={styles.header}>
         <Pressable onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="black" />
-        </Pressable>      </View>
+        </Pressable>
+      </View>
       <View style={styles.content}>
         <Text style={styles.title}>ADD YOUR JOB</Text>
 
